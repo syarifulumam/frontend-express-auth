@@ -16,7 +16,7 @@ function Register() {
   const onSubmit = async (data) => {
     try {
       await axios.post('/register',data)
-      navigate('/')
+      navigate('/login')
     } catch (error) {
       if(error.response) return setMessage(error.response.data.msg)
     }

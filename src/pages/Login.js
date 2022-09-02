@@ -1,13 +1,23 @@
 import { Box, Button, Typography } from '@mui/material'
-import { Link } from "react-router-dom";
-import React from 'react'
+import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from 'react'
 import FormInput from '../components/FormInput';
 import { useForm } from "react-hook-form";
+import axios from 'axios';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 function Login() {
+  const navigate = useNavigate()
+  const [message,setMessage] = useState('')
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const onSubmit = data => {
-    console.log(data)
+  const onSubmit = async(data) => {
+    try {
+      await axios.post('/login',data)
+      navigate('/')
+    } catch (error) {
+      if(error.response) return setMessage(error.response.data.msg)
+    }
   }
   return (
     <>
@@ -25,6 +35,11 @@ function Login() {
                 borderRadius={2}
             >
                 <Typography variant='h4'>Login</Typography>
+                {message !== "" && (
+                  <Stack sx={{ width: '100%' }} spacing={2}>
+                    <Alert severity="error">{message}</Alert>
+                  </Stack>
+                )}
                 {/* email */}
                 <FormInput 
                   name="email" 
@@ -32,16 +47,25 @@ function Login() {
                   error={!!errors.email}
                   helperText={errors?.email?.message}
                   label="Email"
-                  {...register("email", { required: "email tidak boleh kosong" })} 
+                  {...register("email", { 
+                    required: "email tidak boleh kosong",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Email tidak valid"
+                    }
+                  })} 
                 />
                 {/* password */}
                 <FormInput 
                   name="password" 
-                  type="text" 
+                  type="password" 
                   error={!!errors.password}
                   helperText={errors?.password?.message}
                   label="Password"
-                  {...register("password", { required: "password tidak boleh kosong" })} 
+                  {...register("password", { 
+                    required: "password tidak boleh kosong",
+                    minLength: {value: 3, message: "password minimal 8 huruf"}
+                  })} 
                 />
                 <Typography width={"100%"} variant="caption">
                   Belum punya akun? 
