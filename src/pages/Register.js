@@ -1,15 +1,19 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import React from 'react'
 import { Link } from "react-router-dom";
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import axios from 'axios';
+import { useForm } from "react-hook-form";
+import FormInput from '../components/FormInput';
 
 function Register() {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit = data => {
+    console.log(data)
+  }
   return (
     <>
-        <form action="">
+        <form onSubmit={handleSubmit(onSubmit)}>
             <Box 
                 display="flex" 
                 flexDirection="column"
@@ -23,25 +27,61 @@ function Register() {
                 borderRadius={2}
             >
                 <Typography variant='h4'>Register</Typography>
-                <TextField fullWidth={true} margin='normal' type={'text'} label="Name" variant="outlined" />
-                <TextField fullWidth={true} margin='normal' type={'email'} label="Email" variant="outlined" />
-                <TextField fullWidth={true} margin='normal' type={'password'} label="password" variant="outlined" />
-                <FormControl fullWidth={true} margin='normal'>
-                  <InputLabel id="demo-simple-select-label">Role</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    label="Role"
-                    defaultValue=""
-                  >
-                    <MenuItem value="admin">Admin</MenuItem>
-                    <MenuItem value="user">User</MenuItem>
-                  </Select>
-                </FormControl>
+                {/* Name */}
+                <FormInput 
+                  name="name" 
+                  type="text" 
+                  error={!!errors.name}
+                  helperText={errors?.name?.message}
+                  label="Name"
+                  {...register("name", { required: "nama tidak boleh kosong" })} 
+                />
+                {/* email */}
+                <FormInput 
+                  name="email" 
+                  type="text" 
+                  error={!!errors.email}
+                  helperText={errors?.email?.message}
+                  label="Email"
+                  {...register("email", { required: "email tidak boleh kosong" })} 
+                />
+                {/* password */}
+                <FormInput 
+                  name="password" 
+                  type="text" 
+                  error={!!errors.password}
+                  helperText={errors?.password?.message}
+                  label="Password"
+                  {...register("password", { required: "password tidak boleh kosong" })} 
+                />
+                {/* confirmation password */}
+                <FormInput 
+                  name="passwordConfirmation" 
+                  type="text" 
+                  error={!!errors.passwordConfirmation}
+                  helperText={errors?.passwordConfirmation?.message}
+                  label="Password Confirmation"
+                  {...register("passwordConfirmation", { required: "password confirmasi tidak boleh kosong" })} 
+                />
+                {/* role */}
+                <FormInput 
+                  name="role" 
+                  type="select" 
+                  error={!!errors.role}
+                  helperText={errors?.role?.message}
+                  label="Role"
+                  defaultValue={''}
+                  select={true}
+                  {...register("role", { required: "role tidak boleh kosong" })} 
+                >
+                  <MenuItem value="admin">Admin</MenuItem>
+                  <MenuItem value="user">User</MenuItem>
+                </FormInput>
                 <Typography width={"100%"} variant="caption">
                   Sudah ada akun? 
                   <Link to="/login" style={{ textDecoration:"none" }}>login disini</Link>
                 </Typography>
-                <Button fullWidth={true} variant="contained" sx={{ marginTop: 2 }}>Register</Button>
+                <Button type="submit" fullWidth={true} variant="contained"  sx={{ marginTop: 2 }}>Register</Button>
             </Box>
         </form>
     </>

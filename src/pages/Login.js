@@ -1,11 +1,17 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import { Link } from "react-router-dom";
 import React from 'react'
+import FormInput from '../components/FormInput';
+import { useForm } from "react-hook-form";
 
 function Login() {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit = data => {
+    console.log(data)
+  }
   return (
     <>
-        <form action="">
+        <form onSubmit={handleSubmit(onSubmit)}>
             <Box 
                 display="flex" 
                 flexDirection="column"
@@ -19,13 +25,29 @@ function Login() {
                 borderRadius={2}
             >
                 <Typography variant='h4'>Login</Typography>
-                <TextField fullWidth={true} margin='normal' type={'email'} label="Email" variant="outlined" />
-                <TextField fullWidth={true} margin='normal' type={'password'} label="password" variant="outlined" />
+                {/* email */}
+                <FormInput 
+                  name="email" 
+                  type="text" 
+                  error={!!errors.email}
+                  helperText={errors?.email?.message}
+                  label="Email"
+                  {...register("email", { required: "email tidak boleh kosong" })} 
+                />
+                {/* password */}
+                <FormInput 
+                  name="password" 
+                  type="text" 
+                  error={!!errors.password}
+                  helperText={errors?.password?.message}
+                  label="Password"
+                  {...register("password", { required: "password tidak boleh kosong" })} 
+                />
                 <Typography width={"100%"} variant="caption">
                   Belum punya akun? 
                   <Link to="/register" style={{ textDecoration:"none" }}>daftar disini</Link>
                 </Typography>
-                <Button fullWidth={true} variant="contained" sx={{ marginTop: 2 }}>Login</Button>
+                <Button type="submit" fullWidth={true} variant="contained" sx={{ marginTop: 2 }}>Login</Button>
             </Box>
         </form>
     </>
