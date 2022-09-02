@@ -12,6 +12,7 @@ import {
   Route,
 } from "react-router-dom";
 
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.defaults.withCredentials = true
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

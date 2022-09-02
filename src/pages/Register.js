@@ -1,15 +1,25 @@
 import { Box, Button, Typography } from '@mui/material'
 import React from 'react'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
 import { useForm } from "react-hook-form";
 import FormInput from '../components/FormInput';
+import { useState } from 'react';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 function Register() {
+  const navigate = useNavigate()
+  const [message,setMessage] = useState('')
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const onSubmit = data => {
-    console.log(data)
+  const onSubmit = async (data) => {
+    try {
+      await axios.post('/register',data)
+      navigate('/')
+    } catch (error) {
+      if(error.response) return setMessage(error.response.data.msg)
+    }
   }
   return (
     <>
@@ -27,6 +37,11 @@ function Register() {
                 borderRadius={2}
             >
                 <Typography variant='h4'>Register</Typography>
+                {message !== "" && (
+                  <Stack sx={{ width: '100%' }} spacing={2}>
+                    <Alert severity="error">{message}</Alert>
+                  </Stack>
+                )}
                 {/* Name */}
                 <FormInput 
                   name="name" 
@@ -34,7 +49,10 @@ function Register() {
                   error={!!errors.name}
                   helperText={errors?.name?.message}
                   label="Name"
-                  {...register("name", { required: "nama tidak boleh kosong" })} 
+                  {...register("name", { 
+                    required: "nama tidak boleh kosong",
+                    minLength: {value: 3, message: "Name minimal 3 huruf"}
+                  })} 
                 />
                 {/* email */}
                 <FormInput 
@@ -43,25 +61,37 @@ function Register() {
                   error={!!errors.email}
                   helperText={errors?.email?.message}
                   label="Email"
-                  {...register("email", { required: "email tidak boleh kosong" })} 
+                  {...register("email", { 
+                    required: "email tidak boleh kosong",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Email tidak valid"
+                    }
+                  })} 
                 />
                 {/* password */}
                 <FormInput 
                   name="password" 
-                  type="text" 
+                  type="password" 
                   error={!!errors.password}
                   helperText={errors?.password?.message}
                   label="Password"
-                  {...register("password", { required: "password tidak boleh kosong" })} 
+                  {...register("password", { 
+                    required: "password tidak boleh kosong",
+                    minLength: {value: 3, message: "password minimal 8 huruf"}
+                  })} 
                 />
                 {/* confirmation password */}
                 <FormInput 
-                  name="passwordConfirmation" 
-                  type="text" 
-                  error={!!errors.passwordConfirmation}
-                  helperText={errors?.passwordConfirmation?.message}
+                  name="confirmation_password" 
+                  type="password" 
+                  error={!!errors.confirmation_password}
+                  helperText={errors?.confirmation_password?.message}
                   label="Password Confirmation"
-                  {...register("passwordConfirmation", { required: "password confirmasi tidak boleh kosong" })} 
+                  {...register("confirmation_password", { 
+                    required: "password confirmasi tidak boleh kosong",
+                    minLength: {value: 3, message: "password confirmasi minimal 8 huruf"}
+                  })} 
                 />
                 {/* role */}
                 <FormInput 
