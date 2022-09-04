@@ -1,23 +1,26 @@
 import { Box, Button, Typography } from '@mui/material'
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import FormInput from '../components/FormInput';
 import { useForm } from "react-hook-form";
-import axios from 'axios';
+import { useDispatch,useSelector } from 'react-redux';
+import { LoginUser,reset } from '../features/authSlice';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 
 function Login() {
   const navigate = useNavigate()
-  const [message,setMessage] = useState('')
+  const dispatch = useDispatch()
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const {user,isError,isSuccess,isLoading,message} = useSelector((state) => state.auth)
+
+  useEffect(() => {
+    if(user || isSuccess) return navigate('/')
+    dispatch(reset()) 
+  }, [user,isSuccess,dispatch,navigate])
+  
   const onSubmit = async(data) => {
-    try {
-      await axios.post('/login',data)
-      navigate('/')
-    } catch (error) {
-      if(error.response) return setMessage(error.response.data.msg)
-    }
+    dispatch(LoginUser(data))
   }
   return (
     <>
@@ -35,7 +38,7 @@ function Login() {
                 borderRadius={2}
             >
                 <Typography variant='h4'>Login</Typography>
-                {message !== "" && (
+                {isError && (
                   <Stack sx={{ width: '100%' }} spacing={2}>
                     <Alert severity="error">{message}</Alert>
                   </Stack>
@@ -71,7 +74,7 @@ function Login() {
                   Belum punya akun? 
                   <Link to="/register" style={{ textDecoration:"none" }}>daftar disini</Link>
                 </Typography>
-                <Button type="submit" fullWidth={true} variant="contained" sx={{ marginTop: 2 }}>Login</Button>
+            <Button type="submit" fullWidth={true} disabled={isLoading} variant="contained" sx={{ marginTop: 2 }}>Login</Button>
             </Box>
         </form>
     </>

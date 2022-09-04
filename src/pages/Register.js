@@ -1,25 +1,27 @@
 import { Box, Button, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import MenuItem from '@mui/material/MenuItem';
-import axios from 'axios';
 import { useForm } from "react-hook-form";
 import FormInput from '../components/FormInput';
-import { useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import { useDispatch,useSelector } from 'react-redux';
+import { RegisterUser, reset } from '../features/authSlice';
 
 function Register() {
   const navigate = useNavigate()
-  const [message,setMessage] = useState('')
+  const dispatch = useDispatch()
+  const {user,isError,isSuccess,isLoading,message} = useSelector((state) => state.auth)
   const { register, handleSubmit, formState: { errors } } = useForm();
+  
+  useEffect(() => {
+    if(user || isSuccess) return navigate('/login')
+    dispatch(reset()) 
+  }, [user,isSuccess,dispatch,navigate])
+
   const onSubmit = async (data) => {
-    try {
-      await axios.post('/register',data)
-      navigate('/login')
-    } catch (error) {
-      if(error.response) return setMessage(error.response.data.msg)
-    }
+    dispatch(RegisterUser(data))
   }
   return (
     <>
@@ -37,7 +39,7 @@ function Register() {
                 borderRadius={2}
             >
                 <Typography variant='h4'>Register</Typography>
-                {message !== "" && (
+                {isError && (
                   <Stack sx={{ width: '100%' }} spacing={2}>
                     <Alert severity="error">{message}</Alert>
                   </Stack>
@@ -111,7 +113,7 @@ function Register() {
                   Sudah ada akun? 
                   <Link to="/login" style={{ textDecoration:"none" }}>login disini</Link>
                 </Typography>
-                <Button type="submit" fullWidth={true} variant="contained"  sx={{ marginTop: 2 }}>Register</Button>
+                <Button type="submit" fullWidth={true} disabled={isLoading} variant="contained"  sx={{ marginTop: 2 }}>Register</Button>
             </Box>
         </form>
     </>

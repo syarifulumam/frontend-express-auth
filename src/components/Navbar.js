@@ -13,27 +13,29 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch,useSelector } from 'react-redux';
+import { Logout, reset } from '../features/authSlice';
+
 
 const drawerWidth = 240;
-const navItems = [
-    {
-        name: 'username',
-        link: 'username'
-    },
-    {
-        name: 'logout',
-        link: 'logout'
-    }
-];
 
 function Navbar(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const {user} = useSelector((state) => state.auth)
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const handleLogout = () => {
+    dispatch(Logout())
+    dispatch(reset())
+    navigate('/login')
+  }
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -42,13 +44,16 @@ function Navbar(props) {
       </Typography>
       <Divider />
       <List>
-        {navItems.map((item) => (
-          <ListItem key={item.name} disablePadding>
+          <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={item.name} />
+              <ListItemText primary={"Username"} />
             </ListItemButton>
           </ListItem>
-        ))}
+          <ListItem disablePadding>
+            <ListItemButton sx={{ textAlign: 'center' }}>
+              <ListItemText primary={"Logout"} onClick={handleLogout}/>
+            </ListItemButton>
+          </ListItem>
       </List>
     </Box>
   );
@@ -76,11 +81,8 @@ function Navbar(props) {
             MUI
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {navItems.map((item) => (
-              <Button key={item.name} sx={{ color: '#fff' }}>
-                <Link to={`/${item.link}`} style={{ textDecoration: "none", color:"white" }}>{item.name}</Link>
-              </Button>
-            ))}
+              <Button sx={{ color: '#fff' }}>Username</Button>
+              <Button sx={{ color: '#fff' }} onClick={handleLogout}>Logout</Button>
           </Box>
         </Toolbar>
       </AppBar>
