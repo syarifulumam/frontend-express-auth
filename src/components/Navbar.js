@@ -16,6 +16,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
 import { Logout, reset } from '../features/authSlice';
+import {Link} from 'react-router-dom'
 
 
 const drawerWidth = 240;
@@ -39,14 +40,14 @@ function Navbar(props) {
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
+      <Link to="/"><Typography variant="h6" sx={{ my: 2 }}>
         MUI
-      </Typography>
+      </Typography></Link>
       <Divider />
       <List>
           <ListItem disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={"Username"} />
+            <ListItemButton sx={{ textAlign: 'center'}}>
+              <Link to={'/user'} > <ListItemText primary={"Username"}/></Link>
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
@@ -76,12 +77,12 @@ function Navbar(props) {
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            sx={{ flexGrow: 1,display: { xs: 'none', sm: 'block' } }}
           >
-            MUI
+            <Link to="/">MUI</Link>
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-              <Button sx={{ color: '#fff' }}>Username</Button>
+              <Link to={'/user'}><Button sx={{ color: '#fff' }}>Username</Button></Link>
               <Button sx={{ color: '#fff' }} onClick={handleLogout}>Logout</Button>
           </Box>
         </Toolbar>

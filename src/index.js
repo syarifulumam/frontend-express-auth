@@ -8,6 +8,7 @@ import User from './pages/User'
 import axios from 'axios';
 import { store } from './app/store'
 import { Provider } from 'react-redux'
+import RequestLogin from './pages/RequestLogin'
 import {
   BrowserRouter,
   Routes,
@@ -23,10 +24,12 @@ root.render(
         <Provider store={store}>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<App />}/>
               <Route path="/login" element={<Login />}/>
               <Route path="/register" element={<Register />}/>
-              <Route path="/user" element={<User />}/>
+              <Route element={<RequestLogin />}>
+                <Route path="/" element={<App />}/>
+                <Route path="/user" element={<User />}/>
+              </Route>
             </Routes>
           </BrowserRouter>
         </Provider>

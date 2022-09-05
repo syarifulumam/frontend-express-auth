@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,16 +8,22 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Navbar from '../components/Navbar';
 import { Container } from '@mui/material';
-
-function createData(name, email, role) {
-  return { name, email, role };
-}
-
-const rows = [
-  createData('username', 'email', 'admin'),
-];
+import { useDispatch,useSelector } from 'react-redux';
+import {getUsers} from '../features/userSlice'
+import {RefreshToken} from '../features/authSlice'
+import Button from '@mui/material/Button';
 
 export default function User() {
+  const dispatch = useDispatch()
+  const {token} = useSelector((state) => state.auth)
+  const {dataUser} = useSelector((state) => state.user)
+
+  useEffect(() => {
+    dispatch(RefreshToken())
+    dispatch(getUsers(token))
+  }, [token])
+  
+
   return (
     <>
     <Navbar/>
@@ -27,19 +33,24 @@ export default function User() {
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
-              <TableCell>email</TableCell>
-              <TableCell>role</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Role</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {dataUser && dataUser.map((row) => (
               <TableRow
-                key={row.name}
+                key={row.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.email}</TableCell>
                 <TableCell>{row.role}</TableCell>
+                <TableCell>
+                  <Button variant="contained">Edit</Button>
+                  <Button variant="contained" color={"error"}>Hapus</Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
