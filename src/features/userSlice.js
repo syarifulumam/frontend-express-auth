@@ -21,6 +21,17 @@ export const getUsers = createAsyncThunk("user/getUsers", async(token,thunkAPI) 
         }
     }
 })
+export const deleteUser = createAsyncThunk("user/deleteUser", async(data,thunkAPI) => {
+    try {
+        const response = await userService.deleteUser(data)
+        return response.data
+    } catch (error) {
+        if (error.response) {
+            const message = error.response.data.msg
+            return thunkAPI.rejectWithValue(message)
+        }
+    }
+})
 
 export const useSlice = createSlice({
     name: 'user',
@@ -40,7 +51,18 @@ export const useSlice = createSlice({
         [getUsers.rejected] : (state,action) => {
             state.isError = true
             state.message = action.payload
-        }
+        },
+        [deleteUser.pending] : (state) => {
+            state.isLoading = true
+        },
+        [deleteUser.fulfilled] : (state,action) => {
+            state.isLoading = false
+            state.isSuccess = true
+        },
+        [deleteUser.rejected] : (state,action) => {
+            state.isError = true
+            state.message = action.payload
+        },
     }
 })
 

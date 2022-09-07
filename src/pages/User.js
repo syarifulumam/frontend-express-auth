@@ -12,11 +12,14 @@ import { useDispatch,useSelector } from 'react-redux';
 import {getUsers} from '../features/userSlice'
 import {RefreshToken} from '../features/authSlice'
 import Button from '@mui/material/Button';
+import ButtonDelete from '../components/ButtonDelete';
+
 
 export default function User() {
   const dispatch = useDispatch()
   const {token} = useSelector((state) => state.auth)
   const {dataUser} = useSelector((state) => state.user)
+
 
   useEffect(() => {
     dispatch(RefreshToken())
@@ -49,7 +52,7 @@ export default function User() {
                 <TableCell>{row.role}</TableCell>
                 <TableCell>
                   <Button variant="contained">Edit</Button>
-                  <Button variant="contained" color={"error"}>Hapus</Button>
+                  <ButtonDelete id={row.id}/>
                 </TableCell>
               </TableRow>
             ))}
