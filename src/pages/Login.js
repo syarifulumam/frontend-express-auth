@@ -15,8 +15,9 @@ function Login() {
   const {user,isError,isSuccess,isLoading,message} = useSelector((state) => state.auth)
 
   useEffect(() => {
-    if(user || isSuccess) return navigate('/')
-    // dispatch(reset()) 
+    if(user || isSuccess){
+      return navigate('/')
+    }
   }, [user,isSuccess,dispatch,navigate])
   
   const onSubmit = async(data) => {

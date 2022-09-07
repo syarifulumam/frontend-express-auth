@@ -16,8 +16,11 @@ function Register() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   
   useEffect(() => {
-    if(user || isSuccess) return navigate('/login')
-    dispatch(reset()) 
+    if(user || isSuccess) {
+      dispatch(reset()) 
+      return navigate('/login')
+    }
+    // dispatch(reset()) 
   }, [user,isSuccess,dispatch,navigate])
 
   const onSubmit = async (data) => {
