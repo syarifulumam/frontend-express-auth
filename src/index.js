@@ -8,7 +8,6 @@ import User from './pages/User'
 import axios from 'axios';
 import { store } from './app/store'
 import { Provider } from 'react-redux'
-import RequestLogin from './pages/RequestLogin'
 import PrivateRoute from './utils/PrivateRoute'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist';
