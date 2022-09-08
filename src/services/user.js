@@ -2,7 +2,7 @@ import axios from "axios";
 import axiosJWT from '../pages/RefreshToken'
 
 const getUsers = (token) => {
-    return axios.get('/user',{
+    return axiosJWT.get('/user',{
         headers: {
             'authorization': 'Bearer ' + token,
             'Accept' : 'application/json',
@@ -17,7 +17,7 @@ const updateUser = (data) => {
     return axios.patch(`/user/${data.id}`,data)
 }
 const deleteUser = (data) => {
-    return axios.delete(`/user/${data.id}`,{
+    return axiosJWT.delete(`/user/${data.id}`,{
         headers: {
             'authorization': 'Bearer ' + data.token,
             'Accept' : 'application/json',

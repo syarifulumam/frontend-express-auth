@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import jwtDecode from 'jwt-decode'
-import userService from '../services/user'
+import userService from '../services/User'
 
 const initialState = {
     dataUser : null,

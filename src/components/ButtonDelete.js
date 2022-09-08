@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { useDispatch,useSelector } from 'react-redux';
 import {deleteUser} from '../features/userSlice'
-import {RefreshToken} from '../features/authSlice'
+import { useNavigate } from 'react-router-dom';
 
 export default function ButtonDelete({id}) {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const [open, setOpen] = useState(false);
-    const {token,user} = useSelector((state) => state.auth)
-    
-    // useEffect(() => {
-    //     console.log(token)
-    // }, [token])
+    const {token} = useSelector((state) => state.auth)
+    const {dataUser} = useSelector((state) => state.user)
 
     const handleClickDialog = () => {
         setOpen(!open);
@@ -24,6 +20,8 @@ export default function ButtonDelete({id}) {
 
     const handleDelete = () => {
         dispatch(deleteUser({id: id, token:token}))
+        setOpen(!open)        
+        navigate(0)
     }
 
     return (

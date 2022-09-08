@@ -22,9 +22,8 @@ export default function User() {
 
 
   useEffect(() => {
-    dispatch(RefreshToken())
     dispatch(getUsers(token))
-  }, [token])
+  }, [])
   
 
   return (

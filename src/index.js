@@ -9,6 +9,7 @@ import axios from 'axios';
 import { store } from './app/store'
 import { Provider } from 'react-redux'
 import RequestLogin from './pages/RequestLogin'
+import PrivateRoute from './utils/PrivateRoute'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist';
 import {
@@ -31,7 +32,7 @@ root.render(
               <Routes>
                 <Route path="/login" element={<Login />}/>
                 <Route path="/register" element={<Register />}/>
-                <Route element={<RequestLogin />}>
+                <Route element={<PrivateRoute />}>
                   <Route path="/" element={<App />}/>
                   <Route path="/user" element={<User />}/>
                 </Route>
