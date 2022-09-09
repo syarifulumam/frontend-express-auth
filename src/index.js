@@ -4,6 +4,7 @@ import './index.css'
 import App from './App';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import EditUser from './pages/EditUser';
 import User from './pages/User'
 import axios from 'axios';
 import { store } from './app/store'
@@ -34,6 +35,7 @@ root.render(
                 <Route element={<PrivateRoute />}>
                   <Route path="/" element={<App />}/>
                   <Route path="/user" element={<User />}/>
+                  <Route path="/user/:id/edit" element={<EditUser />}/>
                 </Route>
               </Routes>
             </BrowserRouter>

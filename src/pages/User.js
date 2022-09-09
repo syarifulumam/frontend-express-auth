@@ -9,21 +9,20 @@ import Paper from '@mui/material/Paper';
 import Navbar from '../components/Navbar';
 import { Container } from '@mui/material';
 import { useDispatch,useSelector } from 'react-redux';
-import {getUsers} from '../features/userSlice'
-import {RefreshToken} from '../features/authSlice'
+import {getUsers,usersSelectors} from '../features/userSlice'
 import Button from '@mui/material/Button';
 import ButtonDelete from '../components/ButtonDelete';
+import { Link } from 'react-router-dom';
 
 
 export default function User() {
   const dispatch = useDispatch()
   const {token} = useSelector((state) => state.auth)
-  const {dataUser} = useSelector((state) => state.user)
-
+  const users = useSelector(usersSelectors.selectAll)
 
   useEffect(() => {
     dispatch(getUsers(token))
-  }, [])
+  }, [dispatch])
   
 
   return (
@@ -41,7 +40,7 @@ export default function User() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dataUser && dataUser.map((row) => (
+            {users && users.map((row) => (
               <TableRow
                 key={row.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -50,7 +49,7 @@ export default function User() {
                 <TableCell>{row.email}</TableCell>
                 <TableCell>{row.role}</TableCell>
                 <TableCell>
-                  <Button variant="contained">Edit</Button>
+                  <Link to={`${row.id}/edit`}><Button variant="contained">Edit</Button></Link>
                   <ButtonDelete id={row.id}/>
                 </TableCell>
               </TableRow>

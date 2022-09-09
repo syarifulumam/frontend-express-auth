@@ -10,7 +10,6 @@ axiosJWT.interceptors.request.use(async req => {
     const token = req.headers.authorization
     const decode = jwtDecode(token)
     if(decode.exp * 1000 < currentDate.getTime()){
-        console.log('ss')
         const response = await axios.get('/token')
         req.headers.authorization = `Bearer ${response.data.accessToken}`
     }

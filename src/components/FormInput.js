@@ -2,7 +2,7 @@ import { TextField } from '@mui/material'
 import React, { forwardRef } from 'react'
 
 const FormInput = forwardRef((props,ref) => {
-
+  // console.log(props)
   return (
     <>
         <TextField 

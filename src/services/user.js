@@ -10,11 +10,23 @@ const getUsers = (token) => {
         }
     })
 }
-const getUserById = (id) => {
-    return axios.get(`/user/${id}`)
+const getUserById = ({id,token}) => {
+    return axiosJWT.get(`/user/${id}`,{
+        headers: {
+            'authorization': 'Bearer ' + token,
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
 }
-const updateUser = (data) => {
-    return axios.patch(`/user/${data.id}`,data)
+const updateUser = ({id,token,data}) => {
+    return axiosJWT.patch(`/user/${id}`,data,{
+        headers: {
+            'authorization': 'Bearer ' + token,
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
 }
 const deleteUser = (data) => {
     return axiosJWT.delete(`/user/${data.id}`,{

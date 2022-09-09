@@ -12,7 +12,6 @@ export default function ButtonDelete({id}) {
     const navigate = useNavigate()
     const [open, setOpen] = useState(false);
     const {token} = useSelector((state) => state.auth)
-    const {dataUser} = useSelector((state) => state.user)
 
     const handleClickDialog = () => {
         setOpen(!open);

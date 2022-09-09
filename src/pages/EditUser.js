@@ -1,33 +1,48 @@
 import { Box, Button, Typography } from '@mui/material'
-import React, { useEffect } from 'react'
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from "react-router-dom";
 import MenuItem from '@mui/material/MenuItem';
 import { useForm } from "react-hook-form";
 import FormInput from '../components/FormInput';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import { useDispatch,useSelector } from 'react-redux';
-import { RegisterUser, reset } from '../features/authSlice';
+import { usersSelectors, updateUser } from '../features/userSlice';
+import Navbar from '../components/Navbar';
 
-function Register() {
+function EditUser() {
+  const [name,setName] = useState('')
+  const [email,setEmail] = useState('')
+  const [role,setRole] = useState('')
+  const [password,setPassword] = useState('')
+  const [confirmation_password,setConfirmationPassword] = useState('')
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const {user,isError,isSuccess,isLoading,message} = useSelector((state) => state.auth)
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {id} = useParams()
+  const {token} = useSelector((state) => state.auth)
+  const { register, handleSubmit, formState: { errors }, setValue, getValues } = useForm();
+
+  
+  const user = useSelector(state => usersSelectors.selectById(state, id))
   
   useEffect(() => {
-    if(user || isSuccess) {
-      dispatch(reset()) 
-      return navigate('/login')
+    if(user){
+      setValue("name",user.name)
+      setValue("email",user.email)
+      setValue("role",user.role)
+      setName(user.name)
+      setEmail(user.email)
+      setRole(user.role)
     }
-    // dispatch(reset()) 
-  }, [user,isSuccess,dispatch,navigate])
+  }, [user])
 
   const onSubmit = async (data) => {
-    dispatch(RegisterUser(data))
+    dispatch(updateUser({token,data,id}))
+    navigate('/user')
   }
   return (
     <>
+        <Navbar/>
         <form onSubmit={handleSubmit(onSubmit)}>
             <Box 
                 display="flex" 
@@ -36,17 +51,16 @@ function Register() {
                 alignItems="center"
                 justifyContent="center"
                 margin="auto"
-                marginTop="5%"
                 border="1px solid black"
                 padding="20px"
                 borderRadius={2}
             >
-                <Typography variant='h4'>Register</Typography>
-                {isError && (
+                <Typography variant='h4'>Edit User</Typography>
+                {/* {isError && (
                   <Stack sx={{ width: '100%' }} spacing={2}>
                     <Alert severity="error">{message}</Alert>
                   </Stack>
-                )}
+                )} */}
                 {/* Name */}
                 <FormInput 
                   name="name" 
@@ -54,9 +68,11 @@ function Register() {
                   error={!!errors.name}
                   helperText={errors?.name?.message}
                   label="Name"
+                  value={name}
                   {...register("name", { 
                     required: "nama tidak boleh kosong",
-                    minLength: {value: 3, message: "Name minimal 3 huruf"}
+                    minLength: {value: 3, message: "Name minimal 3 huruf"},
+                    onChange: (e) => {setName(e.target.value)}
                   })} 
                 />
                 {/* email */}
@@ -66,12 +82,14 @@ function Register() {
                   error={!!errors.email}
                   helperText={errors?.email?.message}
                   label="Email"
+                  value={email}
                   {...register("email", { 
                     required: "email tidak boleh kosong",
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       message: "Email tidak valid"
-                    }
+                    },
+                    onChange: (e) => {setEmail(e.target.value)}
                   })} 
                 />
                 {/* password */}
@@ -81,9 +99,9 @@ function Register() {
                   error={!!errors.password}
                   helperText={errors?.password?.message}
                   label="Password"
+                  value={password}
                   {...register("password", { 
-                    required: "password tidak boleh kosong",
-                    minLength: {value: 8, message: "password minimal 8 huruf"}
+                    onChange: (e) => {setPassword(e.target.value)}
                   })} 
                 />
                 {/* confirmation password */}
@@ -93,9 +111,14 @@ function Register() {
                   error={!!errors.confirmation_password}
                   helperText={errors?.confirmation_password?.message}
                   label="Password Confirmation"
+                  value={confirmation_password}
+                  onChange= {(e) => {setConfirmationPassword(e.target.value)}}
                   {...register("confirmation_password", { 
-                    required: "password confirmasi tidak boleh kosong",
-                    minLength: {value: 8, message: "password confirmasi minimal 8 huruf"}
+                    onChange: (e) => {setConfirmationPassword(e.target.value)},
+                    validate: (value) =>{
+                      const {password} = getValues()
+                      return password === value || "Password tidak sama"
+                    }
                   })} 
                 />
                 {/* role */}
@@ -105,22 +128,21 @@ function Register() {
                   error={!!errors.role}
                   helperText={errors?.role?.message}
                   label="Role"
-                  defaultValue={''}
+                  value={role}
                   select={true}
-                  {...register("role", { required: "role tidak boleh kosong" })} 
+                  {...register("role", { 
+                    required: "role tidak boleh kosong",
+                    onChange: (e) => {setRole(e.target.value)}
+                  })} 
                 >
                   <MenuItem value="admin">Admin</MenuItem>
                   <MenuItem value="user">User</MenuItem>
                 </FormInput>
-                <Typography width={"100%"} variant="caption">
-                  Sudah ada akun? 
-                  <Link to="/login" style={{ textDecoration:"none" }}>login disini</Link>
-                </Typography>
-                <Button type="submit" fullWidth={true} disabled={isLoading} variant="contained"  sx={{ marginTop: 2 }}>Register</Button>
+                <Button type="submit" fullWidth={true} variant="contained"  sx={{ marginTop: 2 }}>Update</Button>
             </Box>
         </form>
     </>
   )
 }
 
-export default Register
+export default EditUser
