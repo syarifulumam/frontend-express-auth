@@ -45,11 +45,13 @@ function Navbar(props) {
       </Typography></Link>
       <Divider />
       <List>
+        {user.role === "admin" && (
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: 'center'}}>
               <Link to={'/user'} > <ListItemText primary={"Username"}/></Link>
             </ListItemButton>
           </ListItem>
+        )}
           <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
               <ListItemText primary={"Logout"} onClick={handleLogout}/>
@@ -82,7 +84,9 @@ function Navbar(props) {
             <Link to="/">MUI</Link>
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-              <Link to={'/user'}><Button sx={{ color: '#fff' }}>Username</Button></Link>
+              {user.role === "admin" && (
+                <Link to={'/user'}><Button sx={{ color: '#fff' }}>Username</Button></Link>
+              )}
               <Button sx={{ color: '#fff' }} onClick={handleLogout}>Logout</Button>
           </Box>
         </Toolbar>

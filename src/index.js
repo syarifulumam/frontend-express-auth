@@ -10,6 +10,7 @@ import axios from 'axios';
 import { store } from './app/store'
 import { Provider } from 'react-redux'
 import PrivateRoute from './utils/PrivateRoute'
+import AdminOnly from './utils/AdminOnly'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist';
 import {
@@ -34,8 +35,10 @@ root.render(
                 <Route path="/register" element={<Register />}/>
                 <Route element={<PrivateRoute />}>
                   <Route path="/" element={<App />}/>
-                  <Route path="/user" element={<User />}/>
-                  <Route path="/user/:id/edit" element={<EditUser />}/>
+                  <Route element={<AdminOnly />}>
+                    <Route path="/user" element={<User />}/>
+                    <Route path="/user/:id/edit" element={<EditUser />}/>
+                  </Route>
                 </Route>
               </Routes>
             </BrowserRouter>
