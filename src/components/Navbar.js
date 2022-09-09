@@ -85,7 +85,7 @@ function Navbar(props) {
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               {user.role === "admin" && (
-                <Link to={'/user'}><Button sx={{ color: '#fff' }}>Username</Button></Link>
+                <Link to={'/user'}><Button sx={{ color: '#fff' }}>Daftar User</Button></Link>
               )}
               <Button sx={{ color: '#fff' }} onClick={handleLogout}>Logout</Button>
           </Box>
